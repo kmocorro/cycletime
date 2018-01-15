@@ -1,0 +1,49 @@
+let mysql = require('mysql');
+let Promise = require('bluebird');
+
+let connectAuth = mysql.createPool({
+    multipleStatements: true,
+    connectionLimit: 1000,
+    host: 'localhost',
+    user: 'root',
+    password: '2qhls34r',
+    database: 'dbauth'
+});
+
+function authMES(){   // getting details from local db
+    return new Promise(function(resolve, reject){
+        connectAuth.getConnection(function(err, connection){
+            connection.query({
+                sql: 'SELECT * FROM tbl_mes_details;'
+            },  function(err, results, fields){
+                let auth_mes_obj = [];
+
+                    for(let i=0; i<results.length;i++){
+                        if(results[i].db == 'fab4_cycle_times'){ // DB only for CT
+                            auth_mes_obj.push({
+                                auth_host: results[i].hostname,
+                                auth_user: results[i].user,
+                                auth_password: results[i].pass,
+                                auth_database: results[i].db
+                            });
+                        }
+                    }
+                    
+                resolve(auth_mes_obj);
+            });
+            connection.release();
+        });
+    });
+}
+
+authMES().then(function(auth_mes_obj){
+    let poolMES = mysql.createPool({
+        multipleStatements: 1000,
+        connectionLimit: 1000,
+        host: auth_mes_obj[0].auth_host,
+        user:   auth_mes_obj[0].auth_user,
+        password:   auth_mes_obj[0].auth_password,
+        database: auth_mes_obj[0].auth_database
+    });
+    exports.poolMES = poolMES;
+});
