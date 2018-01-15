@@ -63,6 +63,8 @@ if [ ! $POSTUSER ]; then
             
             start ../vba/mailer.xlsm
 
+            curl -d "user=$POSTUSER&password=$POSTPASS&date2extract=$DATE2EXTRACT&transaction=cycletime" --max-time 300 http://localhost:5000/api/mailer
+
             rm ../temp/curlerIsRunning.txt
         fi
         
@@ -91,6 +93,8 @@ elif [ $POSTUSER ]; then
             curl -d "user=$POSTUSER&password=$POSTPASS&date2extract=$DATE2EXTRACT&transaction=cycletime" --max-time 300 http://localhost:5000/api/rawct
            
             start ../vba/mailer.xlsm
+
+            curl -d "user=$POSTUSER&password=$POSTPASS&date2extract=$DATE2EXTRACT&transaction=cycletime" --max-time 300 http://localhost:5000/api/mailer
             
             rm ../temp/curlerIsRunning.txt
 
@@ -102,5 +106,5 @@ fi
 
 
 $(mysql -u $USER -p$PASS -e 'SHOW PROCESSLIST' | grep dbauth | awk {'print "kill "$1";"'}| mysql -u $USER -p$PASS) # kill all existing connections @ dbauth db
-sleep 5
+sleep 2
 exit

@@ -6,6 +6,7 @@ let mysqlMES = require('../dbconfig/dbMES');
 let moment = require('moment');
 let nodemailer = require('nodemailer');
 let fs = require('fs');
+let XLSX = require('xlsx');
 
 module.exports = function(app){
 
@@ -257,6 +258,9 @@ module.exports = function(app){
                         return toAdmin().then(function(toAdmin_arr){
 
 
+                            let XLSXworkbook = XLSX.readFile('./public/attachment/' + post_auth.date2extract + '.xlsx');
+                            let XLSXworksheet = XLSXworkbook.Sheets['summary'];
+
                             nodemailer.createTestAccount((err, account) => { // mailer gogo
                                 console.log('running nodemailer...');
 
@@ -287,11 +291,11 @@ module.exports = function(app){
                                     from : '"Auto Mailer" <' + authMailer_obj[0].user + '>',
                                     to: recipientsToString,
                                     subject: 'Fab4 Cycle Time & Flow Factor | ' + dateTosend,
-                                    html: '<p>Hi,</p> <br/> <p>Fab4 Cycle time & Flow factor</p> <br/>' + XLSX.utils.sheet_to_html(XLSXworksheet) +'  <br/> <i><p>If you have concern or feedback, Please contact <a href="mailto:kmocorro@sunpowercorp.com?Subject=' + dateTosend +'%20CycleTime%20Feedback" target="_top">Kevin Mocorro</a>. <br/> This message is automated. Do not reply.</p></i>',
+                                    html: '<p>Hi,</p> <br/> <p>Fab4 Cycle time & Flow factor as of ' + dateTosend + '</p> <br/>' + XLSX.utils.sheet_to_html(XLSXworksheet) +'  <br/> <i><p>If you have concern or feedback, Please contact <a href="mailto:kmocorro@sunpowercorp.com?Subject=' + dateTosend +'%20CycleTime%20Feedback" target="_top">Kevin Mocorro</a>. <br/> This message is automated. Do not reply.</p></i>',
                                     attachments : [
                                         {
-                                            filename: post_auth.date2extract + '-Fab4-Cycle-time-&-Flow-factor.xlsx',
-                                            path: './public/attachment/' + post_auth.date2extract + '-Fab4-Cycle-time-&-Flow-factor.xlsx'
+                                            filename: post_auth.date2extract + '.xlsx',
+                                            path: './public/attachment/' + post_auth.date2extract + '.xlsx'
                                         }
                                     ] 
                                 }
