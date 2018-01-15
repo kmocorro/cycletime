@@ -257,9 +257,12 @@ module.exports = function(app){
                     return toRecipient().then(function(toRecipient_arr){
                         return toAdmin().then(function(toAdmin_arr){
 
+                            console.log(toAdmin_arr);
 
                             let XLSXworkbook = XLSX.readFile('./public/attachment/' + post_auth.date2extract + '.xlsx');
                             let XLSXworksheet = XLSXworkbook.Sheets['summary'];
+
+                            let summaryHTML = XLSX.utils.sheet_to_html(XLSXworksheet);
 
                             nodemailer.createTestAccount((err, account) => { // mailer gogo
                                 console.log('running nodemailer...');
@@ -291,7 +294,7 @@ module.exports = function(app){
                                     from : '"Auto Mailer" <' + authMailer_obj[0].user + '>',
                                     to: recipientsToString,
                                     subject: 'Fab4 Cycle Time & Flow Factor | ' + dateTosend,
-                                    html: '<p>Hi,</p> <br/> <p>Fab4 Cycle time & Flow factor as of ' + dateTosend + '</p> <br/>' + XLSX.utils.sheet_to_html(XLSXworksheet) +'  <br/> <i><p>If you have concern or feedback, Please contact <a href="mailto:kmocorro@sunpowercorp.com?Subject=' + dateTosend +'%20CycleTime%20Feedback" target="_top">Kevin Mocorro</a>. <br/> This message is automated. Do not reply.</p></i>',
+                                    html: '<html><head><style type="text/css"> table { font-family: "Calibri", Arial, Helvetica, sans-serif; border-collapse: collapse; width: 50%; } td { border: 1px solid #ddd; padding: 5px; } tr:nth-child(even){background-color: #f2f2f2} th { padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #4CAF50; color: white; }</style> </head><body><p>Hi,</p> <br/> <p>Fab4 Cycle time & Flow factor as of ' + dateTosend + '</p> <br/> ' + summaryHTML +'  <br/> <br/> Please see attached file for more details. <br/> <i><p>Should you have concern or feedback, Kindly send an email to<a href="mailto:' + toAdmin_arr[0] + '?Subject=' + dateTosend +'%20CycleTime%20Feedback" target="_top"> ' + toAdmin_arr[0] + '</a>. <br/> This message is automated. Do not reply.</p></i></body></html>',
                                     attachments : [
                                         {
                                             filename: post_auth.date2extract + '.xlsx',
