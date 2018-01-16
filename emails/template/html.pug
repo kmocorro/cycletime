@@ -1,0 +1,38 @@
+p Hi,
+
+br
+p Fab4 Cycle time & Flow factor of  #{dateTosend}
+
+br
+
+div 
+  table(style="table-layout: fixed; width: 100%; border-collapse: collapse;")
+    thead
+      th(style="border: 1px solid #ddd;font-weight: 800;padding: 2px;background-color: #FFB709;color: #ffff;") Cycle Time
+      th(style="border: 1px solid #ddd;font-weight: 800;padding: 2px;background-color: #FFB709;color: #ffff;") Hours
+      th(style="border: 1px solid #ddd;font-weight: 800;padding: 2px;background-color: #FFB709;color: #ffff;") Days
+    tbody
+      each post, i in tableJSON
+        tr
+        
+        td(style="border: 1px solid #ddd;text-align: center;font-weight: 800;")
+            p(style="margin:2px;") 
+                = tableJSON[i]['Cycle Time']
+        td(style="border: 1px solid #ddd;text-align: center;")
+            p(style="margin:2px;") 
+                = tableJSON[i]['Hours']
+        td(style="border: 1px solid #ddd;text-align: center;")
+            p(style="margin:2px;") 
+                = tableJSON[i]['Days']
+
+  
+br
+p Please see attached file for more details.
+
+      
+br
+br
+
+p(style="font-size:14px; font-style: italic;") Should you have concern or feedback, kindly send an email to 
+    a(href=`mailto:`+ admin ) #{admin}
+p(style="font-size:14px; font-style: italic;") This is an automatically generated email. Do not reply

@@ -7,6 +7,7 @@ let moment = require('moment');
 let nodemailer = require('nodemailer');
 let fs = require('fs');
 let XLSX = require('xlsx');
+let Email = require('email-templates');
 
 module.exports = function(app){
 
@@ -257,16 +258,20 @@ module.exports = function(app){
                     return toRecipient().then(function(toRecipient_arr){
                         return toAdmin().then(function(toAdmin_arr){
 
-                            console.log(toAdmin_arr);
-
+                            
                             let XLSXworkbook = XLSX.readFile('./public/attachment/' + post_auth.date2extract + '.xlsx');
                             let XLSXworksheet = XLSXworkbook.Sheets['summary'];
 
-                            let summaryHTML = XLSX.utils.sheet_to_html(XLSXworksheet);
+                            let summaryJSON = XLSX.utils.sheet_to_json(XLSXworksheet);
 
                             nodemailer.createTestAccount((err, account) => { // mailer gogo
                                 console.log('running nodemailer...');
-
+                                // recipients to string
+                                let recipientsToString = toRecipient_arr.join(", "); // join array with comma
+                                let dateExtracted = moment(new Date()).subtract('1', 'day');
+                                let dateTosend = moment(dateExtracted).format('llll');
+                                
+                                //  create template based sender
                                 let transporter = nodemailer.createTransport({
                                     host: authMailer_obj[0].host,
                                     port: authMailer_obj[0].port,
@@ -279,22 +284,56 @@ module.exports = function(app){
                                         ciphers: authMailer_obj[0].cipher
                                     }
                                 });
+                                
+                                let email = new Email({
+                                    message : {
+                                        from :'"Auto Mailer" <' + authMailer_obj[0].user + '>',
+                                    },
+                                    transport: transporter
+                                });
+                                
+                                email.send({
+                                    template: 'template',
+                                    locals: {
+                                        dateTosend: dateTosend,
+                                        tableJSON : summaryJSON,
+                                        admin: toAdmin_arr[0]
+                                    },
+                                    message: {
+                                        to: recipientsToString,
+                                        subject: 'Fab4 Cycle Time & Flow Factor | ' + dateTosend,
+                                        attachments : [
+                                            {
+                                                filename: 'Fab4-Cycle-Time-&-Flow-Factor-' + post_auth.date2extract + '.xlsx',
+                                                path: './public/attachment/' + post_auth.date2extract + '.xlsx'
+                                            }
+                                        ] 
+                                    }
+                                    
+                                })
+                                .then(function(){
+                                    console.log;
+                                    console.log('Sent');
+                                    res.send('Message Sent');
+                                })
+                                .catch(console.error);
 
-                                // recipients to string
-                                let recipientsToString = toRecipient_arr.join(", "); // join array with comma
 
-                                console.log(recipientsToString);
+                                
+                                /*email.render('./template/email-template', {
+                                        name: 'Elon'
+                                    })
+                                    .then(console.log)
+                                    .catch(console.error); */
 
-
-                                let dateExtracted = moment(new Date()).subtract('1', 'day');
-                                let dateTosend = moment(dateExtracted).format('llll');
+                                /* '<html><head></head><body><p>Hi,</p> <br/> <p>Fab4 Cycle time & Flow factor of ' + dateTosend + '</p> <br/> ' + summaryHTML +'  <br/> <br/> Please see attached file for more details. <br/> <i><p>Should you have concern or feedback, kindly send an email to <a href="mailto:' + toAdmin_arr[0] + '?Subject=' + dateTosend +'%20CycleTime%20Feedback" target="_top">' + toAdmin_arr[0] + '</a>. <br/> This is an automatically generated email. Do not reply.</p></i></body></html>'   
 
                                 // setup mail options
                                 let mailOptions = {
                                     from : '"Auto Mailer" <' + authMailer_obj[0].user + '>',
                                     to: recipientsToString,
                                     subject: 'Fab4 Cycle Time & Flow Factor | ' + dateTosend,
-                                    html: '<html><head><style type="text/css"> table { font-family: "Calibri", Arial, Helvetica, sans-serif; border-collapse: collapse; width: 50%; } td { border: 1px solid #ddd; padding: 5px; } tr:nth-child(even){background-color: #f2f2f2} th { padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #4CAF50; color: white; }</style> </head><body><p>Hi,</p> <br/> <p>Fab4 Cycle time & Flow factor as of ' + dateTosend + '</p> <br/> ' + summaryHTML +'  <br/> <br/> Please see attached file for more details. <br/> <i><p>Should you have concern or feedback, Kindly send an email to<a href="mailto:' + toAdmin_arr[0] + '?Subject=' + dateTosend +'%20CycleTime%20Feedback" target="_top"> ' + toAdmin_arr[0] + '</a>. <br/> This message is automated. Do not reply.</p></i></body></html>',
+                                    html: email,
                                     attachments : [
                                         {
                                             filename: post_auth.date2extract + '.xlsx',
@@ -310,6 +349,7 @@ module.exports = function(app){
                                     console.log('Sent');
                                     res.send('Message Sent');
                                 });
+                                */ 
 
                             });
 
