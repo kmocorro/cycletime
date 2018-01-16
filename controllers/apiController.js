@@ -265,7 +265,7 @@ module.exports = function(app){
                             let summaryJSON = XLSX.utils.sheet_to_json(XLSXworksheet);
 
                             nodemailer.createTestAccount((err, account) => { // mailer gogo
-                                console.log('running nodemailer...');
+                                //console.log('running nodemailer...');
                                 // recipients to string
                                 let recipientsToString = toRecipient_arr.join(", "); // join array with comma
                                 let dateExtracted = moment(new Date()).subtract('1', 'day');
@@ -304,7 +304,7 @@ module.exports = function(app){
                                         subject: 'Fab4 Cycle Time & Flow Factor | ' + dateTosend,
                                         attachments : [
                                             {
-                                                filename: 'Fab4-Cycle-Time-&-Flow-Factor-' + post_auth.date2extract + '.xlsx',
+                                                filename: post_auth.date2extract + '-fab4-cycle-time-and-flow-factor' + '.xlsx',
                                                 path: './public/attachment/' + post_auth.date2extract + '.xlsx'
                                             }
                                         ] 
@@ -312,20 +312,14 @@ module.exports = function(app){
                                     
                                 })
                                 .then(function(){
-                                    console.log;
-                                    console.log('Sent');
+                                    //console.log;
+                                    //console.log('Sent');
                                     res.send('Message Sent');
                                 })
                                 .catch(console.error);
 
 
                                 
-                                /*email.render('./template/email-template', {
-                                        name: 'Elon'
-                                    })
-                                    .then(console.log)
-                                    .catch(console.error); */
-
                                 /* '<html><head></head><body><p>Hi,</p> <br/> <p>Fab4 Cycle time & Flow factor of ' + dateTosend + '</p> <br/> ' + summaryHTML +'  <br/> <br/> Please see attached file for more details. <br/> <i><p>Should you have concern or feedback, kindly send an email to <a href="mailto:' + toAdmin_arr[0] + '?Subject=' + dateTosend +'%20CycleTime%20Feedback" target="_top">' + toAdmin_arr[0] + '</a>. <br/> This is an automatically generated email. Do not reply.</p></i></body></html>'   
 
                                 // setup mail options
