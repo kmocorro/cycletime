@@ -6,4 +6,5 @@
 
 cd /c/sandbox/cycletime-automailer;
 echo "reviving node..."
-nodemon app.js;
+pm2 restart all
+done

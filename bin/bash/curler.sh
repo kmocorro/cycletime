@@ -1,7 +1,7 @@
 # !/bin/bash
 # Curler
 # Xtranghero
-# VERSION 1.0
+# VERSION 2.0 
 # 2018-01-13
 
 # curler per shift 6:30 & 18:30
@@ -19,19 +19,36 @@ POSTPASS=$(mysql -h$HOST -u $USER -p$PASS $DB -s<<<"SELECT pass FROM tbl_cloud_d
 
 
 connectionRefused(){ # nodejs reviver
-    echo "Initialize node reviver..."
-    rm ../temp/curlerIsRunning.txt
+    
+    if [ -e "../temp/nodeIsRunning.txt" ]; then
+        echo "node reviver is already running..."
+        sleep 2
+        exit
+    else
+        touch ../temp/nodeIsRunning.txt
 
-    # rinse
-    start ./nodereviver.sh
+        echo "Initialize node reviver..."
+        rm ../temp/curlerIsRunning.txt
 
-    # and
-    sleep 10
+        # rinse
+        start ./nodereviver.sh
 
-    # repeat
-    sh ./curler.sh
+        
+        echo "Waiting for npm to initialize..."
+        # and
+        sleep 30
 
-    exit
+
+
+        rm ../temp/nodeIsRunning.txt
+
+        # repeat
+        sh ./curler.sh
+
+        exit
+        
+    fi
+    
 }
 
 # if db isn't accessible, start xampp mysql
@@ -105,6 +122,6 @@ elif [ $POSTUSER ]; then
 fi
 
 
-$(mysql -u $USER -p$PASS -e 'SHOW PROCESSLIST' | grep dbauth | awk {'print "kill "$1";"'}| mysql -u $USER -p$PASS) # kill all existing connections @ dbauth db
+$(mysql -u $USER -p$PASS -e 'SHOW PROCESSLIST' | grep dbauth | awk {'print "kill "$1";"'}| mysql -u $USER -p$PASS) # kill all existing connections @ local dbauth db
 sleep 2
 exit

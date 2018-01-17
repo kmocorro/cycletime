@@ -118,6 +118,7 @@ module.exports = function(app){
                 });
             }
         });
+        
     });
 
     app.post('/api/mailer', function(req, res){
@@ -285,12 +286,15 @@ module.exports = function(app){
                                     }
                                 });
                                 
+                                // using email-templates
                                 let email = new Email({
                                     message : {
                                         from :'"Auto Mailer" <' + authMailer_obj[0].user + '>',
                                     },
                                     transport: transporter
                                 });
+
+                                // using pug/jade templating as email template
                                 
                                 email.send({
                                     template: 'template',
@@ -318,43 +322,15 @@ module.exports = function(app){
                                 })
                                 .catch(console.error);
 
-
-                                
-                                /* '<html><head></head><body><p>Hi,</p> <br/> <p>Fab4 Cycle time & Flow factor of ' + dateTosend + '</p> <br/> ' + summaryHTML +'  <br/> <br/> Please see attached file for more details. <br/> <i><p>Should you have concern or feedback, kindly send an email to <a href="mailto:' + toAdmin_arr[0] + '?Subject=' + dateTosend +'%20CycleTime%20Feedback" target="_top">' + toAdmin_arr[0] + '</a>. <br/> This is an automatically generated email. Do not reply.</p></i></body></html>'   
-
-                                // setup mail options
-                                let mailOptions = {
-                                    from : '"Auto Mailer" <' + authMailer_obj[0].user + '>',
-                                    to: recipientsToString,
-                                    subject: 'Fab4 Cycle Time & Flow Factor | ' + dateTosend,
-                                    html: email,
-                                    attachments : [
-                                        {
-                                            filename: post_auth.date2extract + '.xlsx',
-                                            path: './public/attachment/' + post_auth.date2extract + '.xlsx'
-                                        }
-                                    ] 
-                                }
-
-                                transporter.sendMail(mailOptions, (error, info) => {
-                                    if (error) {
-                                        return console.log(error);
-                                    }
-                                    console.log('Sent');
-                                    res.send('Message Sent');
-                                });
-                                */ 
-
                             });
 
-
+                            
                         });
                     });
                 });
             }
         });
 
-
     });
-
+    
 }
