@@ -352,12 +352,12 @@ module.exports = function(app){
                                         .catch(console.error);
     
                                     });
-        
-        
-                                    
-                                } 
-                                else if(post_auth.transaction == 'outsNwip') { // outs and wip sender
     
+                                
+                                } 
+                                
+                                if(post_auth.transaction == 'outsNwip') { // outs and wip sender
+                                    res.send('soon');
                                 }
                                 
                             });

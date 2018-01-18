@@ -123,5 +123,5 @@ fi
 
 
 $(mysql -u $USER -p$PASS -e 'SHOW PROCESSLIST' | grep dbauth | awk {'print "kill "$1";"'}| mysql -u $USER -p$PASS) # kill all existing connections @ local dbauth db
-sleep 2
+sleep 1
 exit
