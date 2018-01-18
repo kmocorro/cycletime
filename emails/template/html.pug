@@ -1,7 +1,7 @@
 p(style="font-size:14px; font-family: Calibri") Hi,
 
 
-    p(style="font-size:14px; font-family: Calibri") Fab4 Cycle time of  #{dateTosend}
+    p(style="font-size:14px; font-family: Calibri") Fab4 Cycle time of  #{htmlDate}
 
 
             div(style="margin: 0px;")
@@ -9,7 +9,7 @@ p(style="font-size:14px; font-family: Calibri") Hi,
                 
                 thead
 
-                tr: th(colspan="3" style="font-size:16px;border: 1px solid #ddd;font-family: Calibri;font-weight: 800;padding: 4px;background-color: #0076be;color: #FFFFFF;") Fab4 Cycle time | Summary
+                tr: th(colspan="3" style="font-size:16px;border: 1px solid #ddd;font-family: Calibri;font-weight: 800;padding: 4px;background-color: #0076be;color: #FFFFFF;") Fab4 Cycle time | #{htmlDate}
                 th(style="width: 16.67%;font-size:16px;border: 1px solid #ddd;font-weight: 800;font-family: Calibri;padding: 2px;background-color: #f7921e;color: #FFFFFF;") Cycle Time
                 th(style="width: 16.67%;font-size:16px;border: 1px solid #ddd;font-weight: 800;font-family: Calibri;padding: 2px;background-color: #f7921e;color: #FFFFFF;") Hours
                 th(style="width: 16.67%;font-size:16px;border: 1px solid #ddd;font-weight: 800;font-family: Calibri;padding: 2px;background-color: #f7921e;color: #FFFFFF;") Days
@@ -26,6 +26,28 @@ p(style="font-size:14px; font-family: Calibri") Hi,
                             p(style="font-size:12px; font-family: Calibri; margin:2px;") 
                                 = tableJSON[i]['Days']
                     tr
+            
+
+                div
+                    table(style=" width: 50%; height: 50%; border-collapse: collapse;")
+                        thead
+                            tr: th(colspan="3" style="font-size:16px;border: 1px solid #ddd;font-family: Calibri;font-weight: 800;padding: 4px;background-color: #0076be;color: #FFFFFF;") Fab4 Flow Factor 
+                            th(style="width: 16.67%;font-size:16px;border: 1px solid #ddd;font-weight: 800;font-family: Calibri;padding: 2px;background-color: #f7921e;color: #FFFFFF;") Flow Factor as of
+                            th(style="width: 16.67%;font-size:16px;border: 1px solid #ddd;font-weight: 800;font-family: Calibri;padding: 2px;background-color: #f7921e;color: #FFFFFF;") Fab4 RPT
+                            th(style="width: 16.67%;font-size:16px;border: 1px solid #ddd;font-weight: 800;font-family: Calibri;padding: 2px;background-color: #f7921e;color: #FFFFFF;") EOL Flow factor
+                            tbody
+                            each post, i in ffTableJson
+                                tr
+                                    td(style="border: 1px solid #ddd;font-family: Calibri;text-align: center;font-weight: 800;width: 16.67%;")
+                                        p(style="font-size:12px; font-family: Calibri; margin:2px;") 
+                                            = ffTableJson[i]['Flow factor']
+                                    td(style="border: 1px solid #ddd;font-family: Calibri;text-align: center;width: 16.67%;")
+                                        p(style="font-size:12px; font-family: Calibri; margin:2px;") 
+                                            = ffTableJson[i]['Fab4 RPT']
+                                    td(style="border: 1px solid #ddd;font-family: Calibri;text-align: center;width: 16.67%;")
+                                        p(style="font-size:12px; font-family: Calibri; margin:2px;") 
+                                            = ffTableJson[i]['EOL Flow factor']
+                                tr
 
             p(style="font-size:14px; font-family: Calibri") Please see attached file for more details.
 

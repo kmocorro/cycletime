@@ -12,7 +12,7 @@ HOST="localhost"
 USER="root"
 PASS="2qhls34r"
 DB="dbauth"
-CHECKSERVER=$(wget --server-response http://localhost:5000/ -O /c/sandbox/cycletime-automailer/public/zlog/reslog.txt 2>&1 | grep -c 'HTTP/1.1 200 OK')
+CHECKSERVER=$(wget --server-response http://localhost:3000/ -O /c/sandbox/cycletime-automailer/public/zlog/reslog.txt 2>&1 | grep -c 'HTTP/1.1 200 OK')
 POSTUSER=$(mysql -h$HOST -u $USER -p$PASS $DB -s<<<"SELECT user FROM tbl_cloud_details;")
 POSTPASS=$(mysql -h$HOST -u $USER -p$PASS $DB -s<<<"SELECT pass FROM tbl_cloud_details;")
 
@@ -68,7 +68,7 @@ if [ ! $POSTUSER ]; then
         touch ../temp/curlerIsRunning.txt
 
         if [ $CHECKSERVER != 1 ]; then
-            echo "http://localhost:5000/ is offline"
+            echo "http://localhost:3000/ is offline"
             rm ../temp/curlerIsRunning.txt
             
             # 
@@ -76,11 +76,11 @@ if [ ! $POSTUSER ]; then
                 
         else
             echo "server is running..."
-            curl -d "user=$POSTUSER&password=$POSTPASS&date2extract=$DATE2EXTRACT&transaction=cycletime" --max-time 300 http://localhost:5000/api/rawct
+            curl -d "user=$POSTUSER&password=$POSTPASS&date2extract=$DATE2EXTRACT&transaction=cycletime" --max-time 300 http://localhost:3000/api/rawct
             
             start ../vba/mailer.xlsm
 
-            curl -d "user=$POSTUSER&password=$POSTPASS&date2extract=$DATE2EXTRACT&transaction=cycletime" --max-time 300 http://localhost:5000/api/mailer
+            curl -d "user=$POSTUSER&password=$POSTPASS&date2extract=$DATE2EXTRACT&transaction=cycletime" --max-time 300 http://localhost:3000/api/mailer
 
             rm ../temp/curlerIsRunning.txt
         fi
@@ -99,7 +99,7 @@ elif [ $POSTUSER ]; then
         touch ../temp/curlerIsRunning.txt
 
         if [ $CHECKSERVER != 1 ]; then
-            echo "http://localhost:5000/ is offline"
+            echo "http://localhost:3000/ is offline"
             rm ../temp/curlerIsRunning.txt
             
             # 
@@ -107,11 +107,11 @@ elif [ $POSTUSER ]; then
                 
         else
             echo "server is running..."
-            curl -d "user=$POSTUSER&password=$POSTPASS&date2extract=$DATE2EXTRACT&transaction=cycletime" --max-time 300 http://localhost:5000/api/rawct
+            curl -d "user=$POSTUSER&password=$POSTPASS&date2extract=$DATE2EXTRACT&transaction=cycletime" --max-time 300 http://localhost:3000/api/rawct
            
             start ../vba/mailer.xlsm
 
-            curl -d "user=$POSTUSER&password=$POSTPASS&date2extract=$DATE2EXTRACT&transaction=cycletime" --max-time 300 http://localhost:5000/api/mailer
+            curl -d "user=$POSTUSER&password=$POSTPASS&date2extract=$DATE2EXTRACT&transaction=cycletime" --max-time 300 http://localhost:3000/api/mailer
             
             rm ../temp/curlerIsRunning.txt
 

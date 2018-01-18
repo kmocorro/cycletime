@@ -1,18 +1,10 @@
 let mysql = require('mysql');
 let Promise = require('bluebird');
-
-let connectAuth = mysql.createPool({
-    multipleStatements: true,
-    connectionLimit: 1000,
-    host: 'localhost',
-    user: 'root',
-    password: '2qhls34r',
-    database: 'dbauth'
-});
+let connectAuth = require('./config');
 
 function authCloud(){
     return new Promise(function(resolve, reject){
-        connectAuth.getConnection(function(err, connection){
+        connectAuth.connectAuth.getConnection(function(err, connection){
             connection.query({
                 sql: 'SELECT * FROM tbl_cloud_details'
             },  function(err, results, fields){
