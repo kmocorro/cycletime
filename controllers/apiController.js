@@ -334,7 +334,7 @@ module.exports = function(app){
                                             },
                                             message: {
                                                 to: recipientsToString,
-                                                subject: 'Fab4 Cycle Time & Flow Factor | ' + dateTosend,
+                                                subject:  dateTosend +' | Fab4 Cycle Time & Flow Factor',
                                                 attachments : [
                                                     {
                                                         filename: post_auth.date2extract + '-fab4-cycle-time-and-flow-factor' + '.xlsx',
