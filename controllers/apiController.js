@@ -8,8 +8,13 @@ let nodemailer = require('nodemailer');
 let fs = require('fs');
 let XLSX = require('xlsx');
 let Email = require('email-templates');
+let memwatch = require('memwatch-next');
 
 module.exports = function(app){
+
+    memwatch.on('leak', (info) => {
+        console.error('Memory leak detected:\n', info);
+    });
 
     app.use(bodyParser.json({limit: '50mb'}));
     app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
