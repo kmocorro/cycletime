@@ -1,0 +1,6 @@
+# Ignore folder node_module
+node_modules/
+*.vscode/
+bin/vba/mailer.xlsm
+public/attachment
+public/raw
